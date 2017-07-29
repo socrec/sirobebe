@@ -21,10 +21,12 @@ class AppAsset extends AssetBundle
         'css/site.css',
         'css/select2.min.css',
         'css/PrintArea.css',
+        'css/slick.css',
     ];
     public $js = [
         'js/select2.full.min.js',
         'js/jquery.PrintArea.js',
+        'js/slick.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

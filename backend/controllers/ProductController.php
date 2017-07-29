@@ -63,8 +63,20 @@ class ProductController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        
+        $styles = Style::find()->where(['id' => explode(',', $model->style_id)])->all();
+        if (count($styles)) {
+            foreach ($styles as $style) {
+                $model->styles[] = $style->title;
+            }
+            $model->styles = implode(', ', $model->styles);
+        }
+        $model->import_price = number_format($model->import_price).'đ';
+        $model->list_price = number_format($model->list_price).'đ';
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model
         ]);
     }
 
