@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : locahost
+Source Server         : localhost
 Source Server Version : 50621
-Source Host           : localhost:3306
+Source Host           : 127.0.0.1:3306
 Source Database       : vashop
 
 Target Server Type    : MYSQL
 Target Server Version : 50621
 File Encoding         : 65001
 
-Date: 2017-07-29 12:51:52
+Date: 2017-07-30 21:09:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -128,7 +128,7 @@ CREATE TABLE `product_images` (
   `product_id` bigint(32) DEFAULT NULL,
   `path` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of product_images
@@ -139,6 +139,7 @@ INSERT INTO `product_images` VALUES ('3', '11', 'uploads/19223025_14245561576112
 INSERT INTO `product_images` VALUES ('4', '12', 'uploads/18620297_10155243979002141_7553569249730215790_n.jpg');
 INSERT INTO `product_images` VALUES ('5', '12', 'uploads/19223025_1424556157611232_5372023399373301341_o.jpg');
 INSERT INTO `product_images` VALUES ('6', '12', 'uploads/19576703_487693618229746_1627675532_o.jpg');
+INSERT INTO `product_images` VALUES ('7', '12', 'uploads/597de71e1ad509498_412725365548758_2905611576649314797_n.jpg');
 
 -- ----------------------------
 -- Table structure for product_sizes
@@ -163,7 +164,7 @@ INSERT INTO `product_sizes` VALUES ('3', '8', '1', '1', '1', '1');
 INSERT INTO `product_sizes` VALUES ('4', '9', '1', '1', '1', '1');
 INSERT INTO `product_sizes` VALUES ('5', '10', '1', '1', '1', '1');
 INSERT INTO `product_sizes` VALUES ('6', '11', '1', '1', '1', '1');
-INSERT INTO `product_sizes` VALUES ('7', '12', '1', '60', '12', '15');
+INSERT INTO `product_sizes` VALUES ('7', '12', '3', '20', '12', '15');
 INSERT INTO `product_sizes` VALUES ('8', '12', '2', '50', '7', '9');
 
 -- ----------------------------

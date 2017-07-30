@@ -70,7 +70,8 @@ use yii\widgets\MaskedInput;
         ],
     ]);
 
-    echo $form->field($model, 'images[]')->fileInput(['multiple' => true, 'accept' => 'image/*']);
+    echo $form->field($model, 'images[]')->fileInput(['multiple' => true, 'accept' => 'image/*'])
+        ->label($model->id ? 'Thêm Ảnh Sản Phẩm' : 'Ảnh Sản Phẩm');
 //    echo $form->field($model, 'images[]')->widget(FileInput::classname(), [
 //        'options' => [
 //            'accept' => 'image/*',
@@ -80,77 +81,159 @@ use yii\widgets\MaskedInput;
 //    ]);
     ?>
     <div class="row-plus">
-        <label class="control-label" for="product-import_price">Thêm Sizes</label>
-        <div class="row">
-            <div class="form-group field-product-import_price col-md-2">
-                <?=
-                MaskedInput::widget([
-                    'name' => 'Product[size][]',
-                    'clientOptions' => [
-                        'alias' => 'decimal',
-                        'groupSeparator' => ',',
-                        'autoGroup' => true
-                    ],
-                    'options' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Size'
-                    ]
-                ]);
-                ?>
-                <div class="help-block"></div>
+        <label class="control-label" for="product-import_price">Sizes</label>
+        <?php if($model->id) {
+            foreach ($model->productSizes as $index => $size) { ?>
+                <div class="row">
+                    <input type="hidden" name="Product[size_id][]" value="<?= $size->id ?>">
+                    <div class="form-group field-product-import_price col-md-2">
+                        <?=
+                        MaskedInput::widget([
+                            'name' => 'Product[size][]',
+                            'value' => $size->size,
+                            'clientOptions' => [
+                                'alias' => 'decimal',
+                                'groupSeparator' => ',',
+                                'autoGroup' => true
+                            ],
+                            'options' => [
+                                'class' => 'form-control',
+                                'placeholder' => 'Size'
+                            ]
+                        ]);
+                        ?>
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group field-product-import_price col-md-2">
+                        <!--            <input id="product-import_price" class="form-control" name="Product[min_weight][]" required="" type="text">-->
+                        <?=
+                        MaskedInput::widget([
+                            'name' => 'Product[min_weight][]',
+                            'value' => $size->min_weight,
+                            'clientOptions' => [
+                                'alias' => 'decimal',
+                                'groupSeparator' => ',',
+                                'autoGroup' => true
+                            ],
+                            'options' => [
+                                'class' => 'form-control',
+                                'placeholder' => 'Số Kg Nhỏ Nhất'
+                            ]
+                        ]);
+                        ?>
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group field-product-import_price col-md-2">
+                        <?= MaskedInput::widget([
+                            'name' => 'Product[max_weight][]',
+                            'value' => $size->max_weight,
+                            'clientOptions' => [
+                                'alias' => 'decimal',
+                                'groupSeparator' => ',',
+                                'autoGroup' => true
+                            ],
+                            'options' => [
+                                'class' => 'form-control',
+                                'placeholder' => 'Số Kg Lớn Nhất'
+                            ]
+                        ]); ?>
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="form-group field-product-import_price col-md-2">
+                        <?= MaskedInput::widget([
+                            'name' => 'Product[quantity][]',
+                            'value' => $size->quantity,
+                            'clientOptions' => [
+                                'alias' => 'decimal',
+                                'groupSeparator' => ',',
+                                'autoGroup' => true
+                            ],
+                            'options' => [
+                                'class' => 'form-control',
+                                'placeholder' => 'Số Lượng Hàng'
+                            ]
+                        ]); ?>
+                        <div class="help-block"></div>
+                    </div>
+                    <div class="col-md-2">
+                        <?php if ($index == 0) { ?>
+                            <a onclick="addRow(this)" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+                        <?php } ?>
+                    </div>
+                </div>
+            <?php } ?>
+        <?php } else { ?>
+            <div class="row">
+                <div class="form-group field-product-import_price col-md-2">
+                    <?=
+                    MaskedInput::widget([
+                        'name' => 'Product[size][]',
+                        'clientOptions' => [
+                            'alias' => 'decimal',
+                            'groupSeparator' => ',',
+                            'autoGroup' => true
+                        ],
+                        'options' => [
+                            'class' => 'form-control',
+                            'placeholder' => 'Size'
+                        ]
+                    ]);
+                    ?>
+                    <div class="help-block"></div>
+                </div>
+                <div class="form-group field-product-import_price col-md-2">
+        <!--            <input id="product-import_price" class="form-control" name="Product[min_weight][]" required="" type="text">-->
+                    <?=
+                    MaskedInput::widget([
+                        'name' => 'Product[min_weight][]',
+                        'clientOptions' => [
+                            'alias' => 'decimal',
+                            'groupSeparator' => ',',
+                            'autoGroup' => true
+                        ],
+                        'options' => [
+                            'class' => 'form-control',
+                            'placeholder' => 'Số Kg Nhỏ Nhất'
+                        ]
+                    ]);
+                    ?>
+                    <div class="help-block"></div>
+                </div>
+                <div class="form-group field-product-import_price col-md-2">
+                    <?= MaskedInput::widget([
+                        'name' => 'Product[max_weight][]',
+                        'clientOptions' => [
+                            'alias' => 'decimal',
+                            'groupSeparator' => ',',
+                            'autoGroup' => true
+                        ],
+                        'options' => [
+                            'class' => 'form-control',
+                            'placeholder' => 'Số Kg Lớn Nhất'
+                        ]
+                    ]); ?>
+                    <div class="help-block"></div>
+                </div>
+                <div class="form-group field-product-import_price col-md-2">
+                    <?= MaskedInput::widget([
+                        'name' => 'Product[quantity][]',
+                        'clientOptions' => [
+                            'alias' => 'decimal',
+                            'groupSeparator' => ',',
+                            'autoGroup' => true
+                        ],
+                        'options' => [
+                            'class' => 'form-control',
+                            'placeholder' => 'Số Lượng Hàng'
+                        ]
+                    ]); ?>
+                    <div class="help-block"></div>
+                </div>
+                <div class="col-md-2">
+                    <a onclick="addRow(this)" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
+                </div>
             </div>
-            <div class="form-group field-product-import_price col-md-2">
-    <!--            <input id="product-import_price" class="form-control" name="Product[min_weight][]" required="" type="text">-->
-                <?=
-                MaskedInput::widget([
-                    'name' => 'Product[min_weight][]',
-                    'clientOptions' => [
-                        'alias' => 'decimal',
-                        'groupSeparator' => ',',
-                        'autoGroup' => true
-                    ],
-                    'options' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Số Kg Nhỏ Nhất'
-                    ]
-                ]);
-                ?>
-                <div class="help-block"></div>
-            </div>
-            <div class="form-group field-product-import_price col-md-2">
-                <?= MaskedInput::widget([
-                    'name' => 'Product[max_weight][]',
-                    'clientOptions' => [
-                        'alias' => 'decimal',
-                        'groupSeparator' => ',',
-                        'autoGroup' => true
-                    ],
-                    'options' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Số Kg Lớn Nhất'
-                    ]
-                ]); ?>
-                <div class="help-block"></div>
-            </div>
-            <div class="form-group field-product-import_price col-md-2">
-                <?= MaskedInput::widget([
-                    'name' => 'Product[quantity][]',
-                    'clientOptions' => [
-                        'alias' => 'decimal',
-                        'groupSeparator' => ',',
-                        'autoGroup' => true
-                    ],
-                    'options' => [
-                        'class' => 'form-control',
-                        'placeholder' => 'Số Lượng Hàng'
-                    ]
-                ]); ?>
-                <div class="help-block"></div>
-            </div>
-            <div class="col-md-2">
-                <a onclick="addRow(this)" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a>
-            </div>
-        </div>
+        <?php } ?>
     </div>
 
     <div class="form-group">
@@ -171,6 +254,7 @@ use yii\widgets\MaskedInput;
         var div = $($(a).parents('.row-plus')[0]);
         var html = '<div class="row">'+
             '<div class="form-group field-product-import_price col-md-2">'+
+            '<input type="hidden" name="Product[size_id][]" value="-1">'+
             '<?=
             MaskedInput::widget([
                 'name' => 'Product[size][]',

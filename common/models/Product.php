@@ -81,4 +81,14 @@ class Product extends \yii\db\ActiveRecord
             return false;
         }
     }
+
+    public function getProductImages()
+    {
+        return $this->hasMany(ProductImage::className(), ['product_id' => 'id']);
+    }
+
+    public function getProductSizes()
+    {
+        return $this->hasMany(ProductSize::className(), ['product_id' => 'id']);
+    }
 }

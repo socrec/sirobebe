@@ -64,7 +64,6 @@ class ProductController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        
         $styles = Style::find()->where(['id' => explode(',', $model->style_id)])->all();
         if (count($styles)) {
             foreach ($styles as $style) {
@@ -89,9 +88,6 @@ class ProductController extends Controller
     {
         $model = new Product();
 
-//        if (Yii::$app->request->isPost) {
-//            dd(Yii::$app->request->post());
-//        }
         if ($model->load(Yii::$app->request->post())) {
             //create style if new
             $styleIds = [];
@@ -129,7 +125,7 @@ class ProductController extends Controller
                 //create files
                 $model->images = UploadedFile::getInstances($model, 'images');
                 foreach ($model->images as $file) {
-                    $path = 'uploads/' . $file->baseName . '.' . $file->extension;
+                    $path = 'uploads/' . uniqid() . $file->baseName . '.' . $file->extension;
                     $file->saveAs($path);
                     $productImageModel = new ProductImage();
                     $productImageModel->product_id = $model->id;
@@ -139,7 +135,6 @@ class ProductController extends Controller
 
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-            dd($model->errors, Yii::$app->request);
         } else {
             $styles = Style::find()->all();
             $tmp = [];
@@ -166,11 +161,80 @@ class ProductController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $styles = Style::find()->all();
+        $tmp = [];
+        if (count($styles)) {
+            foreach ($styles as $style) {
+                $tmp[$style->id] = $style->title;
+            }
+        }
+
+        $selectedStyles = Style::find()->where(['id' => $model->style_id])->all();
+        foreach ($selectedStyles as $style) {
+            $model->styles[] = $style->id;
+        }
+        $model->date = date_format(date_create_from_format('Y-m-d', $model->date), 'd/m/Y');
+        if ($model->load(Yii::$app->request->post())) {
+            //create style if new
+            $styleIds = [];
+
+            if (count(Yii::$app->request->post('Product')['styles'])) {
+                foreach (Yii::$app->request->post('Product')['styles'] as $style) {
+                    if (!Style::findOne($style)) {
+                        $styleModel = new Style();
+                        $styleModel->title = $style;
+                        $styleModel->save();
+
+                        $styleIds[] = $styleModel->id;
+                    } else {
+                        $styleIds[] = $style;
+                    }
+                }
+            }
+            $model->style_id = implode(',', $styleIds);
+            $model->date = date_format(date_create_from_format('d/m/Y', Yii::$app->request->post('date')), 'Y-m-d');
+
+            if ($model->save()) {
+                //create sizes & quantity
+                if (count(Yii::$app->request->post('Product')['size'])) {
+                    $size_ids = Yii::$app->request->post('Product')['size_id'];
+                    foreach (Yii::$app->request->post('Product')['size'] as $index => $size) {
+                        if ($size_ids[$index] == -1) {
+                            $sizeModel = new ProductSize();
+                            $sizeModel->product_id = $model->id;
+                            $sizeModel->size = $size;
+                            $sizeModel->quantity = Yii::$app->request->post('Product')['quantity'][$index];
+                            $sizeModel->min_weight = Yii::$app->request->post('Product')['min_weight'][$index];
+                            $sizeModel->max_weight = Yii::$app->request->post('Product')['max_weight'][$index];
+                            $sizeModel->save();
+                        } else {
+                            $sizeModel = ProductSize::findOne($size_ids[$index]);
+                            $sizeModel->size = $size;
+                            $sizeModel->quantity = Yii::$app->request->post('Product')['quantity'][$index];
+                            $sizeModel->min_weight = Yii::$app->request->post('Product')['min_weight'][$index];
+                            $sizeModel->max_weight = Yii::$app->request->post('Product')['max_weight'][$index];
+                            $sizeModel->save();
+                        }
+                    }
+                }
+
+                //create files
+                $model->images = UploadedFile::getInstances($model, 'images');
+                foreach ($model->images as $file) {
+                    $path = 'uploads/' . uniqid() . $file->baseName . '.' . $file->extension;
+                    $file->saveAs($path);
+                    $productImageModel = new ProductImage();
+                    $productImageModel->product_id = $model->id;
+                    $productImageModel->path = $path;
+                    $productImageModel->save();
+                }
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'styles' => $tmp
             ]);
         }
     }
