@@ -3,7 +3,7 @@
 /* @var $this yii\web\View */
 use yii\helpers\Url;
 
-$this->title = 'Van Anh Shop';
+$this->title = 'Sirobebe Shop';
 ?>
 <div class="site-index">
 

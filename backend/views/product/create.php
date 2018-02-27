@@ -11,12 +11,15 @@ $this->params['breadcrumbs'][] = ['label' => 'Kho Hàng', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-        'styles' => $styles
-    ]) ?>
-
+    <div class="panel panel-info">
+        <div class="panel-heading"><h4><?= Html::encode($this->title) ?></h4></div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <?= $this->render('_form', [
+                    'model' => $model,
+                    'styles' => $styles
+                ]) ?>
+            </div>
+        </div>
+    </div>
 </div>

@@ -84,7 +84,6 @@ class OrderController extends Controller
 
     public function actionUpdate($id = 0)
     {
-        dd($id);
         $model = Order::find()->where(['id' => $id])->one();
         if (Yii::$app->request->isPost) {
 //            dd(Yii::$app->request->post());
