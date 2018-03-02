@@ -12,14 +12,14 @@ use Yii;
  * @property string $quantity
  * @property string $sell_price
  */
-class OrderProductSize extends \yii\db\ActiveRecord
+class OrderProduct extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'order_product_sizes';
+        return 'order_products';
     }
 
     /**
@@ -28,7 +28,7 @@ class OrderProductSize extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['product_size_id', 'quantity'], 'integer'],
+            [['size_id', 'product_id', 'quantity'], 'integer'],
             [['sell_price'], 'number']
         ];
     }
@@ -40,7 +40,8 @@ class OrderProductSize extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'product_size_id' => 'Product Size ID',
+            'product' => 'Product ID',
+            'size_id' => 'Product Size ID',
             'quantity' => 'Quantity',
             'sell_price' => 'Sell Price',
         ];

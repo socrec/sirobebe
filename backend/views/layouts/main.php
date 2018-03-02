@@ -72,7 +72,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="pull-left">&copy; Sirobebe Shop <?= date('Y') ?></p>
 
-        <p class="pull-right">By <a target="_blank" href="http://dangnhsite.wordpress.com">Dang.NH</a></p>
+        <p class="pull-right">By <a target="_blank" href="http://dangnh.cf">Dang.NH</a></p>
     </div>
 </footer>
 

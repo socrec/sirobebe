@@ -25,6 +25,7 @@ class Product extends \yii\db\ActiveRecord
     public $quantity;
     public $min_weight;
     public $max_weight;
+    public $sizes;
 
     /**
      * @inheritdoc
@@ -40,12 +41,10 @@ class Product extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'updated_at'], 'safe'],
-            [['title', 'from'], 'string', 'max' => 300],
-            [['type'], 'string', 'max' => 200],
+            [['created_at', 'updated_at', 'sizes'], 'safe'],
+            [['title', 'from', 'type'], 'string', 'max' => 300],
             [['gender'], 'string', 'max' => 10],
-            [['date'], 'safe'],
-            [['size', 'quantity', 'max_weight', 'min_weight', 'styles'], 'required'],
+            [['styles', 'date', 'title', 'from', 'list_price', 'import_price'], 'required'],
             [['list_price', 'import_price'], 'number'],
             [['images'], 'file', 'extensions' => 'png, jpg', 'maxFiles' => 100],
         ];

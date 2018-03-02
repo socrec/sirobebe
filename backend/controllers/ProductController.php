@@ -71,8 +71,8 @@ class ProductController extends Controller
             }
             $model->styles = implode(', ', $model->styles);
         }
-        $model->import_price = number_format($model->import_price).'đ';
-        $model->list_price = number_format($model->list_price).'đ';
+        $model->import_price = number_format($model->import_price) . 'đ';
+        $model->list_price = number_format($model->list_price) . 'đ';
 
         return $this->render('view', [
             'model' => $model
@@ -92,7 +92,7 @@ class ProductController extends Controller
             //create style if new
             $styleIds = [];
 
-            if (count(Yii::$app->request->post('Product')['styles'])) {
+            if (count($model->sizes)) {
                 foreach (Yii::$app->request->post('Product')['styles'] as $style) {
                     if (!Style::findOne($style)) {
                         $styleModel = new Style();
@@ -106,18 +106,17 @@ class ProductController extends Controller
                 }
             }
             $model->style_id = implode(',', $styleIds);
-            $model->date = date_format(date_create_from_format('d/m/Y', Yii::$app->request->post('date')), 'Y-m-d');
 
             if ($model->save()) {
                 //create sizes & quantity
-                if (count(Yii::$app->request->post('Product')['size'])) {
-                    foreach (Yii::$app->request->post('Product')['size'] as $index => $size) {
+                if (count($model->sizes)) {
+                    foreach ($model->sizes as $index => $size) {
                         $sizeModel = new ProductSize();
                         $sizeModel->product_id = $model->id;
-                        $sizeModel->size = $size;
-                        $sizeModel->quantity = Yii::$app->request->post('Product')['quantity'][$index];
-                        $sizeModel->min_weight = Yii::$app->request->post('Product')['min_weight'][$index];
-                        $sizeModel->max_weight = Yii::$app->request->post('Product')['max_weight'][$index];
+                        $sizeModel->size = $size['size'];
+                        $sizeModel->quantity = $size['quantity'];
+                        $sizeModel->min_weight = $size['min_weight'];
+                        $sizeModel->max_weight = $size['max_weight'];
                         $sizeModel->save();
                     }
                 }
@@ -135,20 +134,19 @@ class ProductController extends Controller
 
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-        } else {
-            $styles = Style::find()->all();
-            $tmp = [];
-            if (count($styles)) {
-                foreach ($styles as $style) {
-                    $tmp[$style->id] = $style->title;
-                }
-            }
-
-            return $this->render('create', [
-                'model' => $model,
-                'styles' => $tmp
-            ]);
         }
+        $styles = Style::find()->all();
+        $tmp = [];
+        if (count($styles)) {
+            foreach ($styles as $style) {
+                $tmp[$style->id] = $style->title;
+            }
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+            'styles' => $tmp
+        ]);
     }
 
     /**
@@ -173,7 +171,9 @@ class ProductController extends Controller
         foreach ($selectedStyles as $style) {
             $model->styles[] = $style->id;
         }
-        $model->date = date_format(date_create_from_format('Y-m-d', $model->date), 'd/m/Y');
+
+        $model->sizes = $model->productSizes;
+
         if ($model->load(Yii::$app->request->post())) {
             //create style if new
             $styleIds = [];
@@ -192,27 +192,25 @@ class ProductController extends Controller
                 }
             }
             $model->style_id = implode(',', $styleIds);
-            $model->date = date_format(date_create_from_format('d/m/Y', Yii::$app->request->post('date')), 'Y-m-d');
 
             if ($model->save()) {
                 //create sizes & quantity
-                if (count(Yii::$app->request->post('Product')['size'])) {
-                    $size_ids = Yii::$app->request->post('Product')['size_id'];
-                    foreach (Yii::$app->request->post('Product')['size'] as $index => $size) {
-                        if ($size_ids[$index] == -1) {
+                if (count($model->sizes)) {
+                    foreach ($model->sizes as $index => $size) {
+                        if (!$size['size_id']) {
                             $sizeModel = new ProductSize();
                             $sizeModel->product_id = $model->id;
-                            $sizeModel->size = $size;
-                            $sizeModel->quantity = Yii::$app->request->post('Product')['quantity'][$index];
-                            $sizeModel->min_weight = Yii::$app->request->post('Product')['min_weight'][$index];
-                            $sizeModel->max_weight = Yii::$app->request->post('Product')['max_weight'][$index];
+                            $sizeModel->size = $size['size'];
+                            $sizeModel->quantity = $size['quantity'];
+                            $sizeModel->min_weight = $size['min_weight'];
+                            $sizeModel->max_weight = $size['max_weight'];
                             $sizeModel->save();
                         } else {
-                            $sizeModel = ProductSize::findOne($size_ids[$index]);
-                            $sizeModel->size = $size;
-                            $sizeModel->quantity = Yii::$app->request->post('Product')['quantity'][$index];
-                            $sizeModel->min_weight = Yii::$app->request->post('Product')['min_weight'][$index];
-                            $sizeModel->max_weight = Yii::$app->request->post('Product')['max_weight'][$index];
+                            $sizeModel = ProductSize::findOne($size['size_id']);
+                            $sizeModel->size = $size['size'];
+                            $sizeModel->quantity = $size['quantity'];
+                            $sizeModel->min_weight = $size['min_weight'];
+                            $sizeModel->max_weight = $size['max_weight'];
                             $sizeModel->save();
                         }
                     }

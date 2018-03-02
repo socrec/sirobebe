@@ -1,6 +1,3 @@
-# yii console command
-/yii
-
 # phpstorm project files
 .idea
 
@@ -29,3 +26,4 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 tests
+backend/web/uploads/

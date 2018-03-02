@@ -12,6 +12,7 @@ use yii\db\ActiveRecord;
 
 class Order extends ActiveRecord
 {
+    public $products;
     /**
      * @return string the name of the table associated with this ActiveRecord class.
      */
@@ -32,5 +33,10 @@ class Order extends ActiveRecord
     public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['id' => 'customer_id']);
+    }
+
+    public function getProducts()
+    {
+        return $this->hasMany(OrderProduct::className(), ['order_id' => 'id']);
     }
 }
