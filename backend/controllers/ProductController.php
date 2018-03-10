@@ -26,7 +26,7 @@ class ProductController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['create', 'index', 'update', 'delete', 'view', 'load'],
+                        'actions' => ['create', 'index', 'update', 'delete', 'view', 'load', 'get'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -248,6 +248,27 @@ class ProductController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Get product listing
+     * @param string $by
+     */
+    public function actionGet($by = 'title', $term = '')
+    {
+        $db = Yii::$app->getDb();
+        $sql = "SELECT CONCAT(`products`.`title`, ' - Size ', `product_sizes`.`size`) AS `text`, `product_sizes`.`id`, 
+                  `product_sizes`.`product_id`, `list_price`, `import_price`
+                FROM `product_sizes`
+                LEFT JOIN `products` ON `products`.`id`=`product_id`
+                WHERE `$by` LIKE '%$term%'
+                AND `quantity` > 0
+                LIMIT 10";
+        $data = $db->createCommand($sql)->queryAll();
+
+        $result['results'] = $data;
+
+        return json_encode($result);
     }
 
     /**

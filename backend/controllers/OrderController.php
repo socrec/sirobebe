@@ -3,6 +3,7 @@ namespace backend\controllers;
 
 use common\models\Customer;
 use common\models\Order;
+use common\models\OrderProduct;
 use common\models\OrderSearch;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -67,14 +68,26 @@ class OrderController extends Controller
         $model = new Order();
         $customerModel = new Customer();
         if (Yii::$app->request->isPost) {
-            if ($model->load(Yii::$app->request->post())) {
+            $post = Yii::$app->request->post();
+            if ($model->load($post)) {
                 if (!$model->customer_id) {
-                    $customerModel->load(Yii::$app->request->post());
+                    $customerModel->load($post);
                     $customerModel->save();
                     $model->customer_id = $customerModel->id;
                 }
 
+                //reformat shipping fee
+                $model->shipping_fee = str_replace(',', '', $model->shipping_fee);
                 if ($model->save()) {
+                    //create productSizes
+                    foreach ($post['Order']['products'] as $product) {
+                        $orderProduct = new OrderProduct();
+                        $product['order_id'] = $model->id;
+                        $orderProduct->load(['OrderProduct' => $product]);
+
+                        $orderProduct->save();
+                    }
+
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
@@ -86,7 +99,6 @@ class OrderController extends Controller
     {
         $model = Order::find()->where(['id' => $id])->one();
         if (Yii::$app->request->isPost) {
-//            dd(Yii::$app->request->post());
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }

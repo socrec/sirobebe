@@ -30,6 +30,13 @@ class Order extends ActiveRecord
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'products' => 'Sản phẩm',
+        ];
+    }
+
     public function getCustomer()
     {
         return $this->hasOne(Customer::className(), ['id' => 'customer_id']);

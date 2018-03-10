@@ -30,3 +30,14 @@ function dd() {
     }
     die();
 }
+
+/**
+ * Console Dump Die
+ * dd($var);
+ */
+function cdd() {
+    for ($i = 0; $i < func_num_args(); $i++) {
+        print_r(func_get_arg($i));
+    }
+    die();
+}
