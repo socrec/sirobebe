@@ -12,7 +12,6 @@ use yii\db\ActiveRecord;
 
 class Order extends ActiveRecord
 {
-    public $products;
     /**
      * @return string the name of the table associated with this ActiveRecord class.
      */

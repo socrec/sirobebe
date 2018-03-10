@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\widgets\ListView;
 use yii\widgets\DetailView;
 
-$this->title = str_pad($model->id, 5, '0', STR_PAD_LEFT);
+$this->title = str_pad($model->id, 6, '0', STR_PAD_LEFT);
 $this->params['breadcrumbs'][] = ['label' => 'Đơn Hàng', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label' => 'Mã Đơn Hàng',
                     'format' => 'raw',
-                    'value' => str_pad($model->id, 5, '0', STR_PAD_LEFT)
+                    'value' => $this->title
                 ],
                 [
                     'label' => 'Khách Hàng',
@@ -71,16 +71,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'value' => $model->customer->city
                 ],
                 [
-                    'label' => 'Tiền Hàng',
-                    'format' => 'raw',
-                    'value' => '<b>' . number_format($model->total) . 'đ</b>',
-                ],
-                [
-                    'label' => 'Phí Ship',
-                    'format' => 'raw',
-                    'value' => '<b>' . number_format($model->shipping_fee) . 'đ</b>',
-                ],
-                [
                     'label' => 'Ghi Chú',
                     'format' => 'raw',
                     'value' => nl2br($model->memo)
@@ -88,6 +78,36 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]);
         ?>
+        <table id="w0" class="table table-striped table-bordered detail-view">
+            <thead>
+                <th class="text-center">STT</th>
+                <th>Sản phẩm</th>
+                <th class="text-right">Đơn giá</th>
+                <th class="text-right">Số lượng</th>
+                <th class="text-right">Thành tiền</th>
+            </thead>
+            <tbody>
+                <?php foreach ($model->products as $index => $orderProduct) : ?>
+                    <tr>
+                        <td class="text-center"><?= ++$index ?></td>
+                        <td><?= $orderProduct->product->title . ' - Size: ' . $orderProduct->size->size  ?></td>
+                        <td class="text-right"><?= number_format($orderProduct->list_price) ?>đ</td>
+                        <td class="text-right"><?= number_format($orderProduct->quantity) ?></td>
+                        <td class="text-right"><?= number_format($orderProduct->quantity * $orderProduct->list_price) ?>đ</td>
+                    </tr>
+                <?php endforeach; ?>
+                <tr>
+                    <td class="text-center"><?= ++$index ?></td>
+                    <td colspan="3">Phí ship</td>
+                    <td class="text-right"><?= number_format($model->shipping_fee) ?>đ</td>
+                </tr>
+                <tr>
+<!--                    <td class="text-center">--><?//= ++$index ?><!--</td>-->
+                    <td class="text-center" colspan="4">Tổng cộng</td>
+                    <td class="text-right"><?= number_format($model->total) ?>đ</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <script>
         //    $(function () {

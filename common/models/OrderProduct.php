@@ -47,4 +47,14 @@ class OrderProduct extends \yii\db\ActiveRecord
             'import_price' => 'Sell Price',
         ];
     }
+
+    public function getProduct()
+    {
+        return $this->hasOne(Product::className(), ['id' => 'product_id']);
+    }
+
+    public function getSize()
+    {
+        return $this->hasOne(ProductSize::className(), ['id' => 'size_id']);
+    }
 }

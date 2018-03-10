@@ -67,6 +67,7 @@ class OrderController extends Controller
     {
         $model = new Order();
         $customerModel = new Customer();
+
         if (Yii::$app->request->isPost) {
             $post = Yii::$app->request->post();
             if ($model->load($post)) {
@@ -98,12 +99,14 @@ class OrderController extends Controller
     public function actionUpdate($id = 0)
     {
         $model = Order::find()->where(['id' => $id])->one();
+        $customerModel = new Customer();
+
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
-        return $this->render('update', compact('model'));
+        return $this->render('update', compact('model', 'customerModel'));
     }
 
     public function actionView($id)
