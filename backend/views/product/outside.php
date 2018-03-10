@@ -2,32 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Product */
-$this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Kho Hàng', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="product-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Sửa', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Xóa', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Bạn có chắc muốn xóa sản phẩm này?',
-                'method' => 'post',
-            ],
-        ]) ?>
-        <?= Html::a('Gửi Link', '#', [
-            'class' => 'btn btn-warning',
-            'onclick' => 'copyLink()'
-        ]) ?>
-    </p>
 
     <div class="rơw">
         <div class="col-md-6">
@@ -64,11 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'model' => $model,
                 'attributes' => [
                     'title',
-                    'import_price',
                     'list_price',
-                    'date',
-                    'from',
-                    'type',
                     'gender',
                     'styles',
                 ],
@@ -104,12 +81,4 @@ $this->params['breadcrumbs'][] = $this->title;
             cssEase: 'linear'
         });
     });
-    function copyLink() {
-        var temp = $("<input>");
-        $("body").append(temp);
-        temp.val('<?= Url::to(['outside', 'id' => $model->id], true) ?>').select();
-        document.execCommand("copy");
-        temp.remove();
-        alert('Đã copy link vào clipboard! Có thể paste vào bất cứ đâu để gửi.');
-    }
 </script>

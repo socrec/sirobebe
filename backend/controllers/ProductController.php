@@ -30,6 +30,10 @@ class ProductController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['outside'],
+                        'allow' => true,
+                    ],
                 ],
             ],
             'verbs' => [
@@ -78,6 +82,30 @@ class ProductController extends Controller
             'model' => $model
         ]);
     }
+
+    /**
+     * Displays a single Product model.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionOutside($id)
+    {
+        $model = $this->findModel($id);
+        $styles = Style::find()->where(['id' => explode(',', $model->style_id)])->all();
+        if (count($styles)) {
+            foreach ($styles as $style) {
+                $model->styles[] = $style->title;
+            }
+            $model->styles = implode(', ', $model->styles);
+        }
+        $model->import_price = number_format($model->import_price) . 'đ';
+        $model->list_price = number_format($model->list_price) . 'đ';
+
+        return $this->render('outside', [
+            'model' => $model
+        ]);
+    }
+
 
     /**
      * Creates a new Product model.
