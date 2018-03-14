@@ -103,11 +103,41 @@ class OrderController extends Controller
         $customerModel = new Customer();
 
         if (Yii::$app->request->isPost) {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            $post = Yii::$app->request->post();
+            if ($model->load($post)) {
+                if (!$model->customer_id) {
+                    $customerModel->load($post);
+                    $customerModel->save();
+                    $model->customer_id = $customerModel->id;
+                }
+
+                //reformat shipping fee
+                $model->shipping_fee = str_replace(',', '', $model->shipping_fee);
+                if ($model->save()) {
+                    $oldData = OrderProduct::find()->where(['order_id' => $model->id])->all();
+                    foreach ($oldData as $item) {
+                        $item->delete();
+                    }
+                    //create orderProduct
+                    foreach ($post['Order']['products'] as $product) {
+                        $orderProduct = new OrderProduct();
+                        $product['order_id'] = $model->id;
+                        $orderProduct->load(['OrderProduct' => $product]);
+
+                        $orderProduct->save();
+                    }
+
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         }
-        return $this->render('update', compact('model', 'customerModel'));
+
+        //Handle data for update form
+        $selectedProducts = [];
+        foreach ($model->products as $orderProduct) {
+            $selectedProducts[$orderProduct->size_id] = $orderProduct->product->title . ' - Size: ' . $orderProduct->size->size;
+        }
+        return $this->render('update', compact('model', 'customerModel', 'selectedProducts'));
     }
 
     public function actionView($id)

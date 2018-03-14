@@ -2,11 +2,10 @@
 
 /* @var $this yii\web\View */
 
-use yii\helpers\Url;
-use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\widgets\ListView;
 use yii\widgets\DetailView;
+use common\constants\Order;
+use yii\helpers\Url;
 
 $this->title = str_pad($model->id, 6, '0', STR_PAD_LEFT);
 $this->params['breadcrumbs'][] = ['label' => 'Đơn Hàng', 'url' => ['index']];
@@ -29,6 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <div id="print-area">
+        <div class="col-md-6">
+            <img width="100%" src="<?= Url::to('11.png') ?>" alt="">
+        </div>
         <?php
         echo DetailView::widget([
             'model' => $model,
@@ -37,6 +39,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'Mã Đơn Hàng',
                     'format' => 'raw',
                     'value' => $this->title
+                ],
+                [
+                    'label' => 'Trạng Thái',
+                    'format' => 'raw',
+                    'value' => Order::$statuses[$model->status]
                 ],
                 [
                     'label' => 'Khách Hàng',
@@ -51,22 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label' => 'Địa Chỉ',
                     'format' => 'raw',
-                    'value' => $model->customer->address
-                ],
-                [
-                    'label' => 'Phường/Xã',
-                    'format' => 'raw',
-                    'value' => $model->customer->ward
-                ],
-                [
-                    'label' => 'Quận/Huyện',
-                    'format' => 'raw',
-                    'value' => $model->customer->district
-                ],
-                [
-                    'label' => 'Thành Phố',
-                    'format' => 'raw',
-                    'value' => $model->customer->city
+                    'value' => $model->customer->address . ' - ' . $model->customer->ward . ' - ' . $model->customer->district . ' - ' . $model->customer->city
                 ],
                 [
                     'label' => 'Ghi Chú',
@@ -106,6 +98,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 </tr>
             </tbody>
         </table>
+        <div class="col-md-12 text-center">
+            <h3>Mã Vận Đơn: <b><?= $model->tracking_number ? $model->tracking_number : '...' ?></b></h3>
+        </div>
     </div>
     <script>
         //    $(function () {

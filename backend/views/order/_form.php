@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use kartik\select2\Select2;
 use unclead\multipleinput\MultipleInput;
 use yii\widgets\MaskedInput;
+use common\constants\Order;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Product */
@@ -33,6 +34,7 @@ use yii\widgets\MaskedInput;
                         ],
                         'options' => [
                             'theme' => Select2::THEME_BOOTSTRAP,
+                            'data' => $selectedProducts,
                             'pluginOptions' => [
                                 'minimumInputLength' => 1,
                                 'ajax' => [
@@ -89,13 +91,15 @@ use yii\widgets\MaskedInput;
                     [
                         'name' => 'list_price_label',
                         'title' => 'Đơn giá',
-                        'defaultValue' => 0,
+                        'value' => function ($model) {
+                            return number_format($model['list_price']);
+                        },
                         'headerOptions' => [
                             'class' => 'col-md-2'
                         ],
                         'options' => [
                             'readonly' => true,
-                            'value' => 0,
+                            'value' => 121292,
                             'style' => 'text-align: right'
                         ]
                     ],
@@ -117,8 +121,10 @@ use yii\widgets\MaskedInput;
                 ])->label('Phí Ship') ?>
                 <div class="form-group field-order-shipping_fee required has-error">
                     <div class="col-md-10 text-right"><h3>Tổng:</h3></div>
-                    <div class="col-md-2 text-right"><h3 id="total">0đ</h3></div>
+                    <div class="col-md-2 text-right"><h3 id="total"><?= $model->id ? number_format($model->total) : 0 ?>đ</h3></div>
                 </div>
+                <?= $form->field($model, 'status')->dropDownList(Order::$statuses)->label('Trạng Thái') ?>
+                <?= $form->field($model, 'tracking_number')->textInput()->label('Mã Vận Đơn') ?>
                 <?= $form->field($model, 'memo')->textarea()->label('Ghi Chú') ?>
                 <?= $form->field($model, 'total')->hiddenInput()->label(false)?>
             </div>
@@ -137,7 +143,9 @@ use yii\widgets\MaskedInput;
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="old-customer">
-                        <?= $form->field($model, 'customer_id')->dropdownList([],
+                        <?= $form->field($model, 'customer_id')->dropdownList([
+                            $model->customer_id => $model->customer->name
+                        ],
                             [
                                 'id' => 'customer-load'
                             ])->label('Khách Hàng') ?>
@@ -153,7 +161,7 @@ use yii\widgets\MaskedInput;
                     </div>
                 </div>
                 <div class="form-group">
-                    <?= Html::submitButton('Tạo mới', ['class' => 'btn btn-success']) ?>
+                    <?= Html::submitButton('Cập nhật', ['class' => 'btn btn-primary']) ?>
                 </div>
             </div>
         </div>

@@ -14,8 +14,11 @@ $this->title = 'Sirobebe Shop';
             <a class="btn btn-lg btn-success" href="<?= Url::to(['customer/index']) ?>">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Khách Hàng
             </a>
-            <a class="btn btn-lg btn-warning" href="<?= Url::to(['order/index']) ?>">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Đơn Hàng
+            <a class="btn btn-lg btn-warning" href="<?= Url::to(['product/index']) ?>">
+                <span class="glyphicon glyphicon-barcode" aria-hidden="true"></span> Kho Hàng
+            </a>
+            <a class="btn btn-lg btn-primary" href="<?= Url::to(['order/index']) ?>">
+                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Đơn Hàng
             </a>
         </p>
     </div>
