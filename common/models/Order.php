@@ -9,9 +9,23 @@
 namespace common\models;
 
 use yii\db\ActiveRecord;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 class Order extends ActiveRecord
 {
+    public function behaviors()
+    {
+        return [
+            'softDeleteBehavior' => [
+                'class' => SoftDeleteBehavior::className(),
+                'softDeleteAttributeValues' => [
+                    'is_deleted' => 1
+                ],
+                'replaceRegularDelete' => true
+            ]
+        ];
+    }
+
     /**
      * @return string the name of the table associated with this ActiveRecord class.
      */

@@ -291,6 +291,7 @@ class ProductController extends Controller
                 LEFT JOIN `products` ON `products`.`id`=`product_id`
                 WHERE `$by` LIKE '%$term%'
                 AND `quantity` > 0
+                AND `products`.`is_deleted` = 0
                 LIMIT 10";
         $data = $db->createCommand($sql)->queryAll();
 
@@ -308,7 +309,7 @@ class ProductController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Product::findOne($id)) !== null) {
+        if (($model = Product::findOne(['id' => $id, 'is_deleted' => 0])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

@@ -10,6 +10,7 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use common\models\LoginForm;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -74,7 +75,7 @@ class CustomerController extends Controller
 
     public function actionView($id)
     {
-        $model = Customer::find()->where(['id' => $id])->one();
+        $model = $this->findModel($id);
 
         return $this->render('view', compact('model'));
     }
@@ -90,7 +91,7 @@ class CustomerController extends Controller
 
     public function actionUpdate($id = 0)
     {
-        $model = Customer::find()->where(['id' => $id])->one();
+        $model = $this->findModel($id);
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -103,6 +104,7 @@ class CustomerController extends Controller
     {
         $customers = Customer::find()
             ->andFilterWhere(['LIKE', 'name', Yii::$app->request->get('term')])
+            ->andFilterWhere(['is_deleted' => 0])
             ->orFilterWhere(['LIKE', 'phone', Yii::$app->request->get('term')])
             ->limit(10)
             ->all();
@@ -115,5 +117,21 @@ class CustomerController extends Controller
         }
 
         return json_encode($result);
+    }
+
+    /**
+     * Finds the Product model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return Product the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Customer::findOne(['id' => $id, 'is_deleted' => 0])) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

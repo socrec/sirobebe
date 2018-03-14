@@ -33,7 +33,7 @@ class OrderSearch extends Customer
 
     public function search($params)
     {
-        $query = Order::find()->joinWith('customer')->orderBy('orders.id DESC');
+        $query = Order::find()->where(['orders.is_deleted' => 0])->joinWith('customer')->orderBy('orders.id DESC');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

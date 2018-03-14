@@ -41,9 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'label' => 'Khách Hàng',
                     'format' => 'raw',
-                    'value' => Html::a($model->customer->name, Url::to(['customer/view', 'id' => $model->customer_id]), [
-                        'target' => '_blank'
-                    ])
+                    'value' => $model->customer->name
                 ],
                 [
                     'label' => 'SĐT',

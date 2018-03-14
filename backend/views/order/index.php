@@ -37,12 +37,18 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'total',
                 'format' => 'text',
-                'label' => 'Số Tiền'
+                'label' => 'Số Tiền',
+                'value' => function ($model) {
+                    return number_format($model->total) . 'đ';
+                }
             ],
             [
                 'attribute' => 'shipping_fee',
                 'format' => 'text',
-                'label' => 'Phí Ship'
+                'label' => 'Phí Ship',
+                'value' => function ($model) {
+                    return number_format($model->shipping_fee) . 'đ';
+                }
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

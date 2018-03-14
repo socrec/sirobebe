@@ -41,7 +41,7 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find();
+        $query = Product::find()->where(['is_deleted' => 0]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -31,7 +31,7 @@ class CustomerSearch extends Customer
 
     public function search($params)
     {
-        $query = Customer::find()->orderBy('name');
+        $query = Customer::find()->where(['is_deleted' => 0])->orderBy('name');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

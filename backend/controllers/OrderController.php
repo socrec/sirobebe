@@ -12,6 +12,7 @@ use yii\helpers\Url;
 use yii\web\Controller;
 use common\models\LoginForm;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -98,7 +99,7 @@ class OrderController extends Controller
 
     public function actionUpdate($id = 0)
     {
-        $model = Order::find()->where(['id' => $id])->one();
+        $model = $this->findModel($id);
         $customerModel = new Customer();
 
         if (Yii::$app->request->isPost) {
@@ -111,17 +112,33 @@ class OrderController extends Controller
 
     public function actionView($id)
     {
-        $model = Order::find()->where(['id' => $id])->one();
+        $model = $this->findModel($id);
 
         return $this->render('view', compact('model'));
     }
 
     public function actionDelete($id)
     {
-        $model = Order::find()->where(['id' => $id])->one();
+        $model = $this->findModel($id);
         if ($model) {
             $model->delete();
         }
         return $this->redirect(Url::to(['order/index']));
+    }
+
+    /**
+     * Finds the Product model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param string $id
+     * @return Product the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Order::findOne(['id' => $id, 'is_deleted' => 0])) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

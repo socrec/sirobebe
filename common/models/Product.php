@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
  * This is the model class for table "products".
@@ -26,6 +27,19 @@ class Product extends \yii\db\ActiveRecord
     public $min_weight;
     public $max_weight;
     public $sizes;
+
+    public function behaviors()
+    {
+        return [
+            'softDeleteBehavior' => [
+                'class' => SoftDeleteBehavior::className(),
+                'softDeleteAttributeValues' => [
+                    'is_deleted' => 1
+                ],
+                'replaceRegularDelete' => true
+            ]
+        ];
+    }
 
     /**
      * @inheritdoc
