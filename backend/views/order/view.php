@@ -36,16 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'model' => $model,
             'attributes' => [
                 [
-                    'label' => 'Mã Đơn Hàng',
-                    'format' => 'raw',
-                    'value' => $this->title
-                ],
-                [
-                    'label' => 'Trạng Thái',
-                    'format' => 'raw',
-                    'value' => Order::$statuses[$model->status]
-                ],
-                [
                     'label' => 'Khách Hàng',
                     'format' => 'raw',
                     'value' => $model->customer->name

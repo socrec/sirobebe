@@ -143,9 +143,9 @@ use common\constants\Order;
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="old-customer">
-                        <?= $form->field($model, 'customer_id')->dropdownList([
+                        <?= $form->field($model, 'customer_id')->dropdownList($model->customer_id ? [
                             $model->customer_id => $model->customer->name
-                        ],
+                        ] : [],
                             [
                                 'id' => 'customer-load'
                             ])->label('Khách Hàng') ?>
